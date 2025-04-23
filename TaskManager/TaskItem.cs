@@ -24,6 +24,25 @@ namespace TaskManager.Cli
             Priority = priority;
             DueDate = dueDate;
         }
-        
+
+        public void ChangeTaskTitle(string title)
+        {
+            Title = title;
+        }
+
+        public void ChangeTaskDescription(string description)
+        {
+            Description = description;
+        }
+
+        public void ChangeTaskPriority(int priority)
+        {
+            Priority = priority;
+        }
+
+        public void ToggleCompletionStatus()
+        {
+            IsCompleted = !IsCompleted;
+        }
     }
 }

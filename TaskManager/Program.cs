@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
+using System.Threading.Tasks;
 using TaskManager.Cli;
 
 namespace TaskManager
@@ -36,22 +38,12 @@ namespace TaskManager
                 {
                     case 1:
 
-                        for (int i = 0; i < tasks.Count; i++)
-                        {
-                        Console.WriteLine($"\n\n" +
-                            $"TaskID: {tasks[i].Id}\n" +
-                            $"Title: {tasks[i].Title}\n" +
-                            $"Description: {tasks[i].Description}\n" +
-                            $"Priority: {tasks[i].Priority}\n" +
-                            $"\bDueDate: {tasks[0].DueDate.ToString()}");
-                        }
-
+                        ShowTaskItems(tasks);
 
                         break;
                     case 2:
-                        // Изменить
-                        TaskItem task = new TaskItem("Task", "Description", 3, DateOnly.ParseExact("23.04.2025", "dd.MM.yyyy"));
-                        tasks.Add(task);
+                        
+                        AddNewTaskItem(tasks);
                         
                         break;
                     case 3:
@@ -71,12 +63,59 @@ namespace TaskManager
             }            
         }
 
-        // Нужно изменить
-        //private TaskItem CreateTaskItem()
-        //{
-        //    TaskItem task = new TaskItem("Task", "Description", 3, DateOnly.ParseExact("23.04.2025", "dd.MM.yyyy"));
 
-        //    return task;
-        //}
+        static void ShowTaskItems(List<TaskItem> tasks)
+        {
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;             
+                Console.WriteLine($"\n\nЗАДАЧА {i + 1}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"\n" +     
+                    $"Имя задачи: {tasks[i].Title}\n" +
+                    $"Описание: {tasks[i].Description}\n" +
+                    $"Приоритет: {tasks[i].Priority}\n" +
+                    $"\bСрок: {tasks[0].DueDate.ToString()}");
+            }
+        }
+
+        static void AddNewTaskItem(List<TaskItem> tasks)
+        {
+            string title, description;
+            byte priority;
+            DateOnly date;
+
+            // Ввод названия задачи
+            title = ValidateString("Введите имя задачи: ");
+
+            // Ввод описания задачи
+            description = ValidateString("Введите описание задачи: ");           
+
+            Console.Write("Выберите приоритет задачи [2] - Очень низкий, [4] - Низкий, [6] - Средний, [8] - Высокий, [10] - Очень высокий\n: ");
+            priority = byte.Parse(Console.ReadLine());
+            PriorityLevel priorityLevel = (PriorityLevel)priority;
+
+            Console.Write("Введите дедлайн задачи: ");
+            date = DateOnly.ParseExact(Console.ReadLine(), "dd.MM.yyyy");
+
+            TaskItem task = new TaskItem(title, description, priorityLevel, date);
+            tasks.Add(task);
+        }
+
+        static string ValidateString(string message)
+        {
+            string title;
+
+            do
+            {
+                Console.Write($"\n\n{message}");
+                title = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(title))
+                    Console.WriteLine("Имя задачи не может быть пустым!");
+            } while (string.IsNullOrWhiteSpace(title));
+
+            return message;
+        }
     }
 }

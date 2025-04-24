@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using TaskManager.Cli;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskManager
 {
@@ -27,7 +28,7 @@ namespace TaskManager
                 Console.WriteLine("[5] - Выход из программы");
                 Console.WriteLine();
 
-                switch(GetEnteredNumber())
+                switch(InputValidator.GetCommandNumber())
                 {
                     case 1:
 
@@ -79,64 +80,19 @@ namespace TaskManager
             PriorityLevel priority;
 
             // Ввод названия задачи
-            title = ValidateString("Введите имя задачи: ");
+            title = InputValidator.ValidateString("Введите имя задачи: ");
 
             // Ввод описания задачи
-            description = ValidateString("Введите описание задачи: ");
+            description = InputValidator.ValidateString("Введите описание задачи: ");
 
             // Ввод приоритета задачи
-            while (true)
-            {
-                Console.Write("Выберите приоритет задачи [2] - Очень низкий, [4] - Низкий, [6] - Средний, [8] - Высокий, [10] - Очень высокий\n: ");
+            priority = InputValidator.ValidateTaskPriorityLevel();
 
-                if (byte.TryParse(Console.ReadLine(), out byte priorityValue) && Enum.IsDefined(typeof(PriorityLevel), priorityValue))
-                {
-                    priority = (PriorityLevel)priorityValue;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Ошибка: некорректное значение приоритета!");
-                }
-            }
-
-            Console.Write("Введите дедлайн задачи: ");
-            date = DateOnly.ParseExact(Console.ReadLine(), "dd.MM.yyyy");
+            // Ввод срока выполнения задачи
+            date = InputValidator.ValidateTaskDueDate();
 
             TaskItem task = new TaskItem(title, description, priority, date);
             tasks.Add(task);
-        }
-
-        static string ValidateString(string message)
-        {
-            string title;
-
-            do
-            {
-                Console.Write($"\n\n{message}");
-                title = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(title))
-                    Console.WriteLine("Имя задачи не может быть пустым!");
-            } while (string.IsNullOrWhiteSpace(title));
-
-            return title;
-        }
-
-        static byte GetEnteredNumber()
-        {
-
-            byte enteredNumber;
-
-            while (true)
-            {
-                Console.Write("\nВведите код команды: ");
-
-                if (byte.TryParse(Console.ReadLine(), out enteredNumber)) break;
-                else Console.WriteLine("Ошибка: введена некорректная команда!");
-            }
-
-            return enteredNumber;
         }
     }
 }

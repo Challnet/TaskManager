@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TaskManager.Cli
+namespace TaskManager.Domain
 {
     public enum PriorityLevel : byte
     {
@@ -14,7 +14,7 @@ namespace TaskManager.Cli
         High = 8,
         VeryHigh = 10
     }
-    internal class TaskItem
+    public class TaskItem
     {
         public Guid Id { get; private set; }
         public string Title { get; private set; }

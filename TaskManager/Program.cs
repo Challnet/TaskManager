@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
-using TaskManager.Cli;
+using TaskManager.Domain;
+using TaskManager.Application;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskManager

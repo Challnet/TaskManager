@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Domain;
 
-namespace TaskManager.Cli
+namespace TaskManager.Application
 {
-    internal class InputValidator
+    public class InputValidator
     {
         public static byte GetCommandNumber()
         {

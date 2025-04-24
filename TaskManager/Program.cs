@@ -10,15 +10,12 @@ namespace TaskManager
         static void Main(string[] args)
         {
             bool isWorking = true;
-            List<TaskItem> tasks = new List<TaskItem>(); 
+            List<TaskItem> tasks = new List<TaskItem>();
 
             while (isWorking)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.White;
-
-                int enteredNumber;
-
                 Console.WriteLine("Task Manager");
                 Console.WriteLine();
                 Console.WriteLine();
@@ -29,12 +26,8 @@ namespace TaskManager
                 Console.WriteLine("[4] - Изменить задачу");
                 Console.WriteLine("[5] - Выход из программы");
                 Console.WriteLine();
-                Console.WriteLine();
 
-                Console.Write("Введите код команды: ");
-                enteredNumber = int.Parse(Console.ReadLine());
-
-                switch(enteredNumber)
+                switch(GetEnteredNumber())
                 {
                     case 1:
 
@@ -82,23 +75,35 @@ namespace TaskManager
         static void AddNewTaskItem(List<TaskItem> tasks)
         {
             string title, description;
-            byte priority;
             DateOnly date;
+            PriorityLevel priority;
 
             // Ввод названия задачи
             title = ValidateString("Введите имя задачи: ");
 
             // Ввод описания задачи
-            description = ValidateString("Введите описание задачи: ");           
+            description = ValidateString("Введите описание задачи: ");
 
-            Console.Write("Выберите приоритет задачи [2] - Очень низкий, [4] - Низкий, [6] - Средний, [8] - Высокий, [10] - Очень высокий\n: ");
-            priority = byte.Parse(Console.ReadLine());
-            PriorityLevel priorityLevel = (PriorityLevel)priority;
+            // Ввод приоритета задачи
+            while (true)
+            {
+                Console.Write("Выберите приоритет задачи [2] - Очень низкий, [4] - Низкий, [6] - Средний, [8] - Высокий, [10] - Очень высокий\n: ");
+
+                if (byte.TryParse(Console.ReadLine(), out byte priorityValue) && Enum.IsDefined(typeof(PriorityLevel), priorityValue))
+                {
+                    priority = (PriorityLevel)priorityValue;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка: некорректное значение приоритета!");
+                }
+            }
 
             Console.Write("Введите дедлайн задачи: ");
             date = DateOnly.ParseExact(Console.ReadLine(), "dd.MM.yyyy");
 
-            TaskItem task = new TaskItem(title, description, priorityLevel, date);
+            TaskItem task = new TaskItem(title, description, priority, date);
             tasks.Add(task);
         }
 
@@ -115,7 +120,23 @@ namespace TaskManager
                     Console.WriteLine("Имя задачи не может быть пустым!");
             } while (string.IsNullOrWhiteSpace(title));
 
-            return message;
+            return title;
+        }
+
+        static byte GetEnteredNumber()
+        {
+
+            byte enteredNumber;
+
+            while (true)
+            {
+                Console.Write("\nВведите код команды: ");
+
+                if (byte.TryParse(Console.ReadLine(), out enteredNumber)) break;
+                else Console.WriteLine("Ошибка: введена некорректная команда!");
+            }
+
+            return enteredNumber;
         }
     }
 }
